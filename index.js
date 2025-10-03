@@ -1,10 +1,11 @@
-// server.js (UPGRADE: Validasi, Notifikasi, dan Halaman 404)
+// index.js (Perbaikan untuk View Lookup)
 
 const express = require('express');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
-const validator = require('validator'); // Paket baru untuk validasi
-const axios = require('axios'); // Paket baru untuk notifikasi Telegram
+const validator = require('validator'); 
+const axios = require('axios'); 
+const session = require('express-session'); // Pindahkan deklarasi ke atas
 const app = express();
 const port = 3000;
 
@@ -34,16 +35,15 @@ async function sendTelegramNotification(message) {
 }
 
 
-// (Kode koneksi Mongoose, Skema, dan Fungsi generateShortId tetap sama)
-// ...
+// KONEKSI MONGOOSE
 mongoose.connect(MONGODB_URI)
     .then(() => console.log('✅ Terhubung ke MongoDB!'))
     .catch(err => {
-        console.error('❌ Koneksi MongoDB gagal. Pastikan MongoDB berjalan.');
+        console.error('❌ Koneksi MongoDB gagal. Pastikan URI benar dan IP diizinkan.');
         console.error(err);
     });
 
-// --- DEFINISI SKEMA URL (Tetap Sama) ---
+// --- DEFINISI SKEMA URL ---
 const urlSchema = new mongoose.Schema({
     userId: { type: String, required: true },
     fullUrl: { type: String, required: true },
@@ -53,44 +53,46 @@ const urlSchema = new mongoose.Schema({
 });
 const UrlModel = mongoose.model('ShortUrl', urlSchema);
 
-// --- SIMULASI AUTENTIKASI PENGGUNA (Tetap Sama) ---
+// --- SIMULASI AUTENTIKASI PENGGUNA ---
 const CURRENT_USER_ID = 'userA'; 
 
-// --- FUNGSI GENERATOR ID KRIPTOGRAFIS (Tetap Sama) ---
+// --- FUNGSI GENERATOR ID KRIPTOGRAFIS ---
 function generateShortId(url) {
     const hash = crypto.createHash('sha256');
     hash.update(url + Date.now().toString() + Math.random()); 
     let shortId = hash.digest('base64').substring(0, 8); 
     return shortId.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''); 
 }
-// ...
 
 // Middleware untuk menangani notifikasi (menggunakan session)
-const session = require('express-session');
 app.use(session({
-    secret: 'secret-key-yang-kuat', // Ganti dengan key yang kuat
+    secret: 'secret-key-yang-kuat', 
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false } // Atur ke true jika menggunakan HTTPS
+    cookie: { secure: false } 
 }));
 
-app.use(express.urlencoded({ extended: true })); // Middleware untuk parsing body POST
-app.use(express.static('public')); // Middleware untuk file statis
-app.set('view engine', 'ejs'); // <<< BARIS KRITIS YANG HILANG/TERLALU JAUH
+// ******************************************************************
+// KONFIGURASI EXPRESS (Perbaikan Lokasi Views di sini)
+// ******************************************************************
+app.set('view engine', 'ejs'); 
+app.set('views', __dirname + '/views'); // <<< BARIS BARU UNTUK MENENTUKAN LOKASI VIEWS
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public')); 
+
 
 // --- ROUTE UTAMA: Menampilkan Form dan Daftar URL ---
 app.get('/', async (req, res) => {
     try {
         const userUrls = await UrlModel.find({ userId: CURRENT_USER_ID }).sort({ createdAt: -1 });
         
-        // Ambil notifikasi dari session dan hapus setelah digunakan
         const notification = req.session.notification;
         req.session.notification = null; 
 
         res.render('index', { 
             urlDatabase: userUrls,
             currentUser: CURRENT_USER_ID,
-            notification: notification // Kirim notifikasi ke EJS
+            notification: notification
         });
     } catch (error) {
         console.error(error);
@@ -127,6 +129,7 @@ app.post('/shortUrls', async (req, res) => {
             shortId: shortIdValue, 
         });
 
+        // Hati-hati: untuk lingkungan produksi (Vercel), gunakan domain sungguhan
         const shortLink = `http://localhost:${port}/${shortIdValue}`;
         
         // Notifikasi Telegram
