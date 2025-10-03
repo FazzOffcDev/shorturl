@@ -10,13 +10,14 @@ const port = 3000;
 
 // ====================================================================
 // KONFIGURASI MONGODB
-const MONGODB_URI = 'mongodb://localhost:27017/shorturl_db'; 
+const MONGODB_URI = 'mongodb+srv://Vercel-Admin-aforchixy:XFxHtog17ZM413xO@aforchixy.1xg3co5.mongodb.net/?retryWrites=true&w=majority'; 
+MONGODB_URI=""
 // ====================================================================
 
 // ====================================================================
 // KONFIGURASI TELEGRAM
-const TELEGRAM_BOT_TOKEN = 'GANTI_DENGAN_BOT_TOKEN_ANDA'; 
-const TELEGRAM_CHAT_ID = 'GANTI_DENGAN_CHAT_ID_ANDA';
+const TELEGRAM_BOT_TOKEN = '8421721090:AAH5JIPrCm7JNTRv2WWAszZFCKx7oI_PHKU'; 
+const TELEGRAM_CHAT_ID = '8243394905';
 // ====================================================================
 
 // Fungsi untuk mengirim notifikasi ke Telegram
