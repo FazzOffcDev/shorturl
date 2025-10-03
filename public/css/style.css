@@ -1,0 +1,47 @@
+/* public/css/style.css */
+
+/* Pengaturan Background Dasar */
+body {
+    /* Menggunakan background gambar atau gradient untuk efek yang lebih baik pada transparansi */
+    background: linear-gradient(135deg, #1f1c2c, #000000); 
+    min-height: 100vh;
+    color: #f8f9fa; /* Warna teks terang default */
+}
+
+/* Kustomisasi untuk elemen Dark Transparan */
+.transparent-card {
+    /* Menggunakan warna abu-abu gelap dari Bootstrap (sekitar bg-dark) dengan opasitas 80% */
+    background-color: rgba(33, 37, 41, 0.85); 
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Border tipis transparan */
+    border-radius: 1rem;
+    backdrop-filter: blur(5px); /* Efek blur pada background di belakang card */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5); /* Bayangan yang lebih menonjol */
+}
+
+/* Mengatasi latar belakang tabel di dalam card yang bisa tumpang tindih */
+.transparent-card.table-dark {
+    --bs-table-bg: transparent; /* Membuat latar belakang tabel menjadi transparan */
+    color: #f8f9fa;
+}
+
+/* Mengatur baris tabel (agar striping tetap terlihat transparan) */
+.transparent-card tbody tr {
+    background-color: transparent !important;
+}
+
+.transparent-card .table-striped > tbody > tr:nth-of-type(odd) > * {
+    background-color: rgba(0, 0, 0, 0.2) !important; /* Striping yang lebih lembut */
+}
+
+/* Penyesuaian form control agar terlihat transparan dan menyatu */
+.form-control {
+    background-color: rgba(52, 58, 64, 0.6) !important; /* Input field transparan */
+    border-color: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+}
+
+.form-control:focus {
+    background-color: rgba(52, 58, 64, 0.8) !important;
+    border-color: #0d6efd !important;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
+}
