@@ -74,6 +74,9 @@ app.use(session({
     cookie: { secure: false } // Atur ke true jika menggunakan HTTPS
 }));
 
+app.use(express.urlencoded({ extended: true })); // Middleware untuk parsing body POST
+app.use(express.static('public')); // Middleware untuk file statis
+app.set('view engine', 'ejs'); // <<< BARIS KRITIS YANG HILANG/TERLALU JAUH
 
 // --- ROUTE UTAMA: Menampilkan Form dan Daftar URL ---
 app.get('/', async (req, res) => {
