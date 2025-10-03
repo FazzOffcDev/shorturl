@@ -10,8 +10,7 @@ const port = 3000;
 
 // ====================================================================
 // KONFIGURASI MONGODB
-const MONGODB_URI = 'mongodb+srv://Vercel-Admin-aforchixy:XFxHtog17ZM413xO@aforchixy.1xg3co5.mongodb.net/?retryWrites=true&w=majority'; 
-MONGODB_URI=""
+const MONGODB_URI = 'mongodb+srv://Vercel-Admin-aforchixy:XFxHtog17ZM413xO@aforchixy.1xg3co5.mongodb.net/?retryWrites=true&w=majority';
 // ====================================================================
 
 // ====================================================================
